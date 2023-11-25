@@ -6,17 +6,12 @@ namespace bcstl
 {
 	namespace murmur
 	{
-		inline uint32 rotl32(uint32 x, uint8 r)
+		__forceinline uint32 rotl32(uint32 x, uint8 r)
 		{
 			return (x << r) | (x >> (32 - r));
 		}
 
-		inline uint32 get_block_32(const uint32* p, int i)
-		{
-			return p[i];
-		}
-
-		inline uint32 fmix32(uint32 h)
+		__forceinline uint32 fmix32(uint32 h)
 		{
 			h ^= h >> 16;
 			h *= 0x85ebca6b;
@@ -27,6 +22,6 @@ namespace bcstl
 			return h;
 		}
 
-		uint32 hash(const void* key, int len, uint32 seed);
+		uint32 hash(const void* key, int32 len, uint32 seed);
 	}
 }

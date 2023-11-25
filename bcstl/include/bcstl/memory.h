@@ -24,4 +24,32 @@ namespace bcstl
 {
 	void set_memory_allocation_callback(bcstl_memory::memory_allocation_callback_template func);
 	void set_memory_deallocation_callback(bcstl_memory::memory_deallocation_callback_template func);
+	
+
+	/*
+	* basic af "smart" pointer
+	* we dont call the managed pointers constructor or destructor
+	*/
+	template<typename T>
+	struct scoped_pointer
+	{
+	private:
+		T* pointer;
+	
+	public:
+		scoped_pointer()
+		{
+			pointer = (T*)BCSTL_ALLOC(sizeof(T));
+		}
+
+		~scoped_pointer()
+		{
+			BCSTL_FREE(pointer);
+		}
+
+		T& operator*()
+		{
+			return *pointer;
+		}
+	};
 }

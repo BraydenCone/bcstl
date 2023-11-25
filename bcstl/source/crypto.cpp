@@ -1,50 +1,41 @@
 #include "bcstl/crypto.h"
 
-bcstl::uint32 bcstl::murmur::hash(const void* key, int len, bcstl::uint32 seed)
+#define C1 0xcc9e2d51
+#define C2 0x1b873593
+
+bcstl::uint32 bcstl::murmur::hash(const void* key, int32 len, uint32 seed)
 {
-	const bcstl::uint8* data = (const bcstl::uint8*)key;
-	const int nblocks = len / 4;
+	const uint8* data = (const uint8*)key;
+	const int32 number_blocks = len / 4;
 
-	bcstl::uint32 h1 = seed;
+	uint32 h1 = seed;
 
-	const bcstl::uint32 c1 = 0xcc9e2d51;
-	const bcstl::uint32 c2 = 0x1b873593;
+	const uint32* blocks = (const uint32*)(data + number_blocks * 4);
 
-	//----------
-	// body
-
-	const bcstl::uint32* blocks = (const bcstl::uint32*)(data + nblocks * 4);
-
-	for (int i = -nblocks; i; i++)
+	for (int32 i = -number_blocks; i; i++)
 	{
-		bcstl::uint32 k1 = get_block_32(blocks, i);
+		uint32 k1 = blocks[i];
 
-		k1 *= c1;
+		k1 *= C1;
 		k1 = rotl32(k1, 15);
-		k1 *= c2;
+		k1 *= C2;
 
 		h1 ^= k1;
 		h1 = rotl32(h1, 13);
 		h1 = h1 * 5 + 0xe6546b64;
 	}
 
-	//----------
-	// tail
+	const uint8* tail = (const uint8*)(data + number_blocks * 4);
 
-	const bcstl::uint8* tail = (const bcstl::uint8*)(data + nblocks * 4);
-
-	bcstl::uint32 k1 = 0;
+	uint32 k1 = 0;
 
 	switch (len & 3)
 	{
 	case 3: k1 ^= tail[2] << 16;
 	case 2: k1 ^= tail[1] << 8;
 	case 1: k1 ^= tail[0];
-		k1 *= c1; k1 = rotl32(k1, 15); k1 *= c2; h1 ^= k1;
+		k1 *= C1; k1 = rotl32(k1, 15); k1 *= C2; h1 ^= k1;
 	};
-
-	//----------
-	// finalization
 
 	h1 ^= len;
 

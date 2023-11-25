@@ -5,14 +5,16 @@
 static bcstl::uint32 g_seed = 0;
 static bcstl::uint32 g_counter = 0;
 
-bcstl::uint32 bcstl::next_seed()
+namespace bcstl
 {
-	bcstl::uint32 seed = murmur::hash(&g_seed, sizeof(uint32), g_counter);
-	g_counter++;
-	return seed;
+	__forceinline bcstl::uint32 random_hash()
+	{
+		g_counter++;
+		return murmur::hash(&g_seed, sizeof(uint32), g_counter);
+	}
 }
 
-void bcstl::seed_random(bcstl::uint32 seed)
+void bcstl::seed_random(uint32 seed)
 {
 	g_seed = seed;
 	g_counter = 0;
@@ -20,7 +22,7 @@ void bcstl::seed_random(bcstl::uint32 seed)
 
 bcstl::uint32 bcstl::random()
 {
-	uint32 random_number = next_seed();
+	uint32 random_number = random_hash();
 	random_number ^= random_number << 13;
 	random_number ^= random_number >> 17;
 	random_number ^= random_number << 5;

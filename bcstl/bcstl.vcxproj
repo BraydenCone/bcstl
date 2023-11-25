@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\crypto.cpp" />
+    <ClCompile Include="source\math.cpp" />
     <ClCompile Include="source\memory.cpp" />
     <ClCompile Include="source\random.cpp" />
   </ItemGroup>
